@@ -209,6 +209,7 @@
 
 }());
 
+/*
 var tests = {
 rowConflict1: new Board([
       [0, 1, 0, 1],
@@ -295,3 +296,4 @@ for(var test in tests){
   console.log('hasAnyMinorDiagonalConflicts', tests[test].hasAnyMinorDiagonalConflicts());
   console.log('\n **************************************** \n');
 }
+*/
