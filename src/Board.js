@@ -158,6 +158,18 @@
     //   }
     //   return false; // fixme
     // },
+      var index = majorDiagonalColumnIndexAtFirstRow;
+      var count = 0;
+      for (var i=0; i<this.attributes['n']; i++){      
+        if (this._isInBounds(i, i+index)){  
+          count += this.attributes[i][i+index];
+          if (count > 1) {
+            return true;
+          }
+        }     
+      }
+      return false;
+    },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
@@ -165,13 +177,21 @@
       //   return false;
       // }
       // loop through all specified columns
-      for (var i=0; i<this.attributes['n']; i++){
-        if(this.hasMajorDiagonalConflictAt(i)){
-          return true;
-        }   
-      } 
-      return false; // fixme
+      // for (var i=0; i<this.attributes['n']; i++){
+      //   if(this.hasMajorDiagonalConflictAt(i)){
+      //     return true;
+      //   }   
+      // } 
+      // return false; // fixme
+
+      for (var i = (-this.attributes['n']); i<this.attributes['n']; i++){
+         if(this.hasMajorDiagonalConflictAt(i)){
+           return true;
+         }
+      }
+      return false; 
     },
+
 
 
 
@@ -181,22 +201,34 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
 
-      
-      // loop through all rows, starting with first row at specified column  
-      for (var i=0; i<this.attributes['n']; i++){
-        var count = 0;
-        // loop through all columns starting at specified column + 1
-        for (var j=minorDiagonalColumnIndexAtFirstRow ; j>=0; j--){
-          // if count greater than 1
-          if (this._isInBounds(i, j)){  
-            count += this.attributes[i][j];
-            if (count > 1) {
-              return true;
-            }
+      // // loop through all rows, starting with first row at specified column  
+      // for (var i=0; i<this.attributes['n']; i++){
+      //   var count = 0;
+      //   // loop through all columns starting at specified column + 1
+      //   for (var j=minorDiagonalColumnIndexAtFirstRow ; j>=0; j--){
+      //     // if count greater than 1
+      //     if (this._isInBounds(i, j)){  
+      //       count += this.attributes[i][j];
+      //       if (count > 1) {
+      //         return true;
+      //       }
+      //     }
+      //   }
+      // }
+      // return false; // fixme 
+
+      var index = minorDiagonalColumnIndexAtFirstRow;
+      var count = 0;
+      for (var i=0; i<this.attributes['n']; i++){      
+        if (this._isInBounds(i, index-i)){  
+          count += this.attributes[i][index-i];
+          if (count > 1) {
+            return true;
           }
-        }
+        }     
       }
-      return false; // fixme 
+      return false;
+
     },
 
     // test if any minor diagonals on this board contain conflicts
@@ -204,11 +236,18 @@
       // if(this.hasAnyRowConflicts() || this.hasAnyColConflicts() || this.hasAnyMajorDiagonalConflicts()){
       //   return false;
       // }
-      for (var i=0; i<this.attributes['n']; i++){
-        if(this.hasMinorDiagonalConflictAt(i)){
-          return true;
-        }   
-      } 
+      // for (var i=0; i<this.attributes['n']; i++){
+      //   if(this.hasMinorDiagonalConflictAt(i)){
+      //     return true;
+      //   }   
+      // } 
+      // return false; 
+
+      for (var i=(2 * this.attributes['n']); i >= 0; i--){
+         if(this.hasMinorDiagonalConflictAt(i)){
+           return true;
+         }
+      }
       return false; 
     }
 
@@ -307,7 +346,7 @@ for(var test in tests){
   console.log('hasAnyRowConflicts', tests[test].hasAnyRowConflicts());
   console.log('hasAnyColConflicts', tests[test].hasAnyColConflicts());
   if(test !== 'rowConflict1' && test !== 'rowConflict2' && test !== 'colConflict1' && test !== 'colConflict2' ){
-    debugger;
+    //debugger;
   }
   console.log('hasAnyMajorDiagonalConflicts', tests[test].hasAnyMajorDiagonalConflicts());
   console.log('hasAnyMinorDiagonalConflicts', tests[test].hasAnyMinorDiagonalConflicts());
