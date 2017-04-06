@@ -91,15 +91,12 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      // Go through each row
       for(var i=0; i<this.attributes['n']; i++){
-      // If one row has conflict, return true
         if(this.hasRowConflictAt(i)){
           return true;
         }
       }
-      // Else
-      return false; // fixme
+      return false;
     },
 
 
@@ -109,7 +106,6 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      // Get the board
       var count = 0;
       for(var i=0; i<this.attributes['n']; i++){
         count += this.attributes[i][colIndex];
@@ -122,7 +118,6 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      // Loop through all columns
       if(this.hasAnyRowConflicts()){
         return false;
       }
@@ -131,7 +126,7 @@
           return true;
         }
       }
-      return false; // fixme
+      return false;
     },
 
 
@@ -141,23 +136,7 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      
-      // loop through all rows, starting with first row at specified column  
-    //   for (var i=0; i<this.attributes['n']; i++){
-    //     var count = 0;
-    //     // loop through all columns starting at specified column + 1
-    //     for (var j=majorDiagonalColumnIndexAtFirstRow; j<this.attributes['n'];j++){
-    //       // if count greater than 1
-    //       if (this._isInBounds(i, j)){  
-    //         count += this.attributes[i][j];
-    //         if (count > 1) {
-    //           return true;
-    //         }
-    //       }
-    //     }
-    //   }
-    //   return false; // fixme
-    // },
+
       var index = majorDiagonalColumnIndexAtFirstRow;
       var count = 0;
       for (var i=0; i<this.attributes['n']; i++){      
@@ -173,16 +152,6 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      // if(this.hasAnyRowConflicts() || this.hasAnyColConflicts()){
-      //   return false;
-      // }
-      // loop through all specified columns
-      // for (var i=0; i<this.attributes['n']; i++){
-      //   if(this.hasMajorDiagonalConflictAt(i)){
-      //     return true;
-      //   }   
-      // } 
-      // return false; // fixme
 
       for (var i = (-this.attributes['n']); i<this.attributes['n']; i++){
          if(this.hasMajorDiagonalConflictAt(i)){
@@ -201,22 +170,6 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
 
-      // // loop through all rows, starting with first row at specified column  
-      // for (var i=0; i<this.attributes['n']; i++){
-      //   var count = 0;
-      //   // loop through all columns starting at specified column + 1
-      //   for (var j=minorDiagonalColumnIndexAtFirstRow ; j>=0; j--){
-      //     // if count greater than 1
-      //     if (this._isInBounds(i, j)){  
-      //       count += this.attributes[i][j];
-      //       if (count > 1) {
-      //         return true;
-      //       }
-      //     }
-      //   }
-      // }
-      // return false; // fixme 
-
       var index = minorDiagonalColumnIndexAtFirstRow;
       var count = 0;
       for (var i=0; i<this.attributes['n']; i++){      
@@ -233,16 +186,6 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      // if(this.hasAnyRowConflicts() || this.hasAnyColConflicts() || this.hasAnyMajorDiagonalConflicts()){
-      //   return false;
-      // }
-      // for (var i=0; i<this.attributes['n']; i++){
-      //   if(this.hasMinorDiagonalConflictAt(i)){
-      //     return true;
-      //   }   
-      // } 
-      // return false; 
-
       for (var i=(2 * this.attributes['n']); i >= 0; i--){
          if(this.hasMinorDiagonalConflictAt(i)){
            return true;
