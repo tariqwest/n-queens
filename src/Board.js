@@ -79,11 +79,26 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var count = 0; 
+      for (var i = 0; i < this.attributes['n']; i++) {
+        count += this.attributes[rowIndex][i];
+        if (count > 1) {
+          return true;
+        }
+      } 
+      return false; 
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+      // Go through each row
+      for(var i=0; i<this.attributes['n']; i++){
+      // If one row has conflict, return true
+        if(this.hasRowConflictAt(i)){
+          return true;
+        }
+      }
+      // Else
       return false; // fixme
     },
 
@@ -94,11 +109,28 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // Get the board
+      var count = 0;
+      for(var i=0; i<this.attributes['n']; i++){
+        count += this.attributes[i][colIndex];
+        if(count > 1){
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      // Loop through all columns
+      if(this.hasAnyRowConflicts()){
+        return false;
+      }
+      for(var i=0; i<this.attributes['n']; i++){
+        if(this.hasColConflictAt(i)){
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -109,11 +141,35 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
-    },
+      
+      // loop through all rows, starting with first row at specified column  
+    //   for (var i=0; i<this.attributes['n']; i++){
+    //     var count = 0;
+    //     // loop through all columns starting at specified column + 1
+    //     for (var j=majorDiagonalColumnIndexAtFirstRow; j<this.attributes['n'];j++){
+    //       // if count greater than 1
+    //       if (this._isInBounds(i, j)){  
+    //         count += this.attributes[i][j];
+    //         if (count > 1) {
+    //           return true;
+    //         }
+    //       }
+    //     }
+    //   }
+    //   return false; // fixme
+    // },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      // if(this.hasAnyRowConflicts() || this.hasAnyColConflicts()){
+      //   return false;
+      // }
+      // loop through all specified columns
+      for (var i=0; i<this.attributes['n']; i++){
+        if(this.hasMajorDiagonalConflictAt(i)){
+          return true;
+        }   
+      } 
       return false; // fixme
     },
 
@@ -124,12 +180,36 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+
+      
+      // loop through all rows, starting with first row at specified column  
+      for (var i=0; i<this.attributes['n']; i++){
+        var count = 0;
+        // loop through all columns starting at specified column + 1
+        for (var j=minorDiagonalColumnIndexAtFirstRow ; j>=0; j--){
+          // if count greater than 1
+          if (this._isInBounds(i, j)){  
+            count += this.attributes[i][j];
+            if (count > 1) {
+              return true;
+            }
+          }
+        }
+      }
+      return false; // fixme 
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      // if(this.hasAnyRowConflicts() || this.hasAnyColConflicts() || this.hasAnyMajorDiagonalConflicts()){
+      //   return false;
+      // }
+      for (var i=0; i<this.attributes['n']; i++){
+        if(this.hasMinorDiagonalConflictAt(i)){
+          return true;
+        }   
+      } 
+      return false; 
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
@@ -146,3 +226,90 @@
   };
 
 }());
+
+var tests = {
+rowConflict1: new Board([
+      [0, 1, 0, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+      ]),
+
+rowConflict2: new Board([
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [1, 0, 0, 1],
+      [0, 0, 0, 0]
+      ]),
+
+colConflict1: new Board([
+      [0, 0, 0, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 1],
+      [0, 0, 0, 0]
+      ]),
+
+colConflict2: new Board([
+      [0, 0, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 0, 0]
+      ]),
+
+majDiagConflict1 : new Board([
+      [0, 1, 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+      ]),
+
+majDiagConflict2 : new Board([
+      [1, 0, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+      ]),
+
+majDiagConflict3 : new Board([
+      [0, 0, 0, 0],
+      [1, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 1, 0]
+      ]),
+
+minDiagConflict1 : new Board([
+      [0, 0, 1, 0],
+      [0, 1, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+      ]),
+
+minDiagConflict2 : new Board([
+      [0, 0, 0, 1],
+      [0, 0, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 0, 0]
+      ]),
+
+minDiagConflict3 : new Board([
+      [0, 0, 0, 0],
+      [0, 0, 0, 1],
+      [0, 0, 1, 0],
+      [0, 0, 0, 0]
+      ])
+}
+
+for(var test in tests){
+  for(var i=0; i<tests[test].attributes['n']; i++){
+    console.log(tests[test].attributes[i]);  
+  }
+  console.log(test);
+  console.log('hasAnyRowConflicts', tests[test].hasAnyRowConflicts());
+  console.log('hasAnyColConflicts', tests[test].hasAnyColConflicts());
+  if(test !== 'rowConflict1' && test !== 'rowConflict2' && test !== 'colConflict1' && test !== 'colConflict2' ){
+    debugger;
+  }
+  console.log('hasAnyMajorDiagonalConflicts', tests[test].hasAnyMajorDiagonalConflicts());
+  console.log('hasAnyMinorDiagonalConflicts', tests[test].hasAnyMinorDiagonalConflicts());
+  console.log('\n **************************************** \n');
+}
