@@ -14,12 +14,65 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 
+var _findRowPossibilities = function(n){
+  var rowPossibilities = [];
+
+  // Produce all posibilities of placing of placing 1 in a row of size n
+  for(var i=0; i<n; i++){
+    var row = [];
+    for(var j=0; j<n; j++){
+      row.push(0);
+    }
+    row[i] = 1; 
+    rowPossibilities.push(row);
+  }
+
+  return rowPossibilities;
+}
+
+var _findBoardPossibilities = function(n, rowPossibilities) {
+var boardPossibilities = [];
+
+function findBoardPossibility(rowsLeft, result){
+  // when you cover all the rows
+  // push to the boardPossibilities
+  if (rowsLeft === 0) {
+    boardPossibilities.push(result);
+    return;
+  }
+
+  rowPossibilities.forEach(function(row){
+    //result.push(row);
+    //concat returns the entire array
+    findBoardPossibility(rowsLeft-1, result.concat([row]))
+  })
+}
+
+findBoardPossibility(n, []); // give it a starting point
+
+return boardPossibilities;
+}
+
 
 window.findNRooksSolution = function(n, possibility) {
+  
+  // generate identity matrix for n-dimension
+  var identity = [];
+  for(var i=0; i<n; i++){
+      var row = [];
+      for(var j=0; j<n; j++){
+        row.push(0);
+      }
+      row[i] = 1; 
+      identity.push(row);
+  }
+
+  var possibility = possibility || identity;
+
   var solution = false;
   var board = new Board(possibility);
   if(!board.hasAnyColConflicts()){
-    solution = board;
+    solution = possibility;
     //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   }
   return solution;
@@ -29,55 +82,54 @@ window.findNRooksSolution = function(n, possibility) {
 window.countNRooksSolutions = function(n) {
   var solutionCount = 0;
   
-  var findRowPossibilities = function(){
-    var rowPossibilities = [];
+  // var findRowPossibilities = function(){
+  //   var rowPossibilities = [];
 
-    // Produce all posibilities of placing of placing 1 in a row of size n
-    for(var i=0; i<n; i++){
-      var row = [];
-      for(var j=0; j<n; j++){
-        row.push(0);
-      }
-      row[i] = 1; 
-      rowPossibilities.push(row);
-    }
+  //   // Produce all posibilities of placing of placing 1 in a row of size n
+  //   for(var i=0; i<n; i++){
+  //     var row = [];
+  //     for(var j=0; j<n; j++){
+  //       row.push(0);
+  //     }
+  //     row[i] = 1; 
+  //     rowPossibilities.push(row);
+  //   }
 
-    return rowPossibilities;
-  }
+  //   return rowPossibilities;
+  // }
 
 
 
-  var findBoardPossibilities = function(n, rowPossibilities) {
-    var boardPossibilities = [];
+  // var findBoardPossibilities = function(n, rowPossibilities) {
+  //   var boardPossibilities = [];
 
-    function findBoardPossibility(rowsLeft, result){
-      // when you cover all the rows
-      // push to the boardPossibilities
-      if (rowsLeft === 0) {
-        boardPossibilities.push(result);
-        return;
-      }
+  //   function findBoardPossibility(rowsLeft, result){
+  //     // when you cover all the rows
+  //     // push to the boardPossibilities
+  //     if (rowsLeft === 0) {
+  //       boardPossibilities.push(result);
+  //       return;
+  //     }
 
-      rowPossibilities.forEach(function(row){
-        //result.push(row);
-        //concat returns the entire array
-        findBoardPossibility(rowsLeft-1, result.concat([row]))
-      })
-    }
+  //     rowPossibilities.forEach(function(row){
+  //       //result.push(row);
+  //       //concat returns the entire array
+  //       findBoardPossibility(rowsLeft-1, result.concat([row]))
+  //     })
+  //   }
 
-    findBoardPossibility(n, []); // give it a starting point
+  //   findBoardPossibility(n, []); // give it a starting point
 
-    return boardPossibilities;
-  }
+  //   return boardPossibilities;
+  // }
 
-  var possibilities = findBoardPossibilities(n, findRowPossibilities(n));
+  var possibilities = _findBoardPossibilities(n, _findRowPossibilities(n));
 
   for(var i=0; i<possibilities.length; i++){
     if(findNRooksSolution(n, possibilities[i]) !== false){
       solutionCount++;
     }
   }
-
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -90,12 +142,17 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n, possibility) {
+  // generate identity matrix for n-dimension
+
+  var possibility = possibility || 0;
+
   var solution = false;
   var board = new Board(possibility);
   if(!board.hasAnyQueensConflicts()){
-    solution = board;
+    solution = possibility;
     //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   }
+
   return solution;
 };
 
@@ -103,48 +160,48 @@ window.findNQueensSolution = function(n, possibility) {
 window.countNQueensSolutions = function(n) {
   var solutionCount = 0; //fixme
 
-    var findRowPossibilities = function(){
-    var rowPossibilities = [];
+  //   var findRowPossibilities = function(){
+  //   var rowPossibilities = [];
 
-    // Produce all posibilities of placing of placing 1 in a row of size n
-    for(var i=0; i<n; i++){
-      var row = [];
-      for(var j=0; j<n; j++){
-        row.push(0);
-      }
-      row[i] = 1; 
-      rowPossibilities.push(row);
-    }
+  //   // Produce all posibilities of placing of placing 1 in a row of size n
+  //   for(var i=0; i<n; i++){
+  //     var row = [];
+  //     for(var j=0; j<n; j++){
+  //       row.push(0);
+  //     }
+  //     row[i] = 1; 
+  //     rowPossibilities.push(row);
+  //   }
 
-    return rowPossibilities;
-  }
+  //   return rowPossibilities;
+  // }
 
 
 
-  var findBoardPossibilities = function(n, rowPossibilities) {
-    var boardPossibilities = [];
+  // var findBoardPossibilities = function(n, rowPossibilities) {
+  //   var boardPossibilities = [];
 
-    function findBoardPossibility(rowsLeft, result){
-      // when you cover all the rows
-      // push to the boardPossibilities
-      if (rowsLeft === 0) {
-        boardPossibilities.push(result);
-        return;
-      }
+  //   function findBoardPossibility(rowsLeft, result){
+  //     // when you cover all the rows
+  //     // push to the boardPossibilities
+  //     if (rowsLeft === 0) {
+  //       boardPossibilities.push(result);
+  //       return;
+  //     }
 
-      rowPossibilities.forEach(function(row){
-        //result.push(row);
-        //concat returns the entire array
-        findBoardPossibility(rowsLeft-1, result.concat([row]))
-      })
-    }
+  //     rowPossibilities.forEach(function(row){
+  //       //result.push(row);
+  //       //concat returns the entire array
+  //       findBoardPossibility(rowsLeft-1, result.concat([row]))
+  //     })
+  //   }
 
-    findBoardPossibility(n, []); // give it a starting point
+  //   findBoardPossibility(n, []); // give it a starting point
 
-    return boardPossibilities;
-  }
+  //   return boardPossibilities;
+  // }
 
-  var possibilities = findBoardPossibilities(n, findRowPossibilities(n));
+  var possibilities = _findBoardPossibilities(n, _findRowPossibilities(n));
 
   for(var i=0; i<possibilities.length; i++){
     if(findNQueensSolution(n, possibilities[i]) !== false){
